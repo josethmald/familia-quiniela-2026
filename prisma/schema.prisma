@@ -1,0 +1,96 @@
+// Prisma Schema — Quiniela Mundial 2026
+// Modelo de datos según SRS v3.0, Sección 6
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Estado del partido
+enum EstadoPartido {
+  PENDIENTE
+  FINALIZADO
+}
+
+/// Ronda del torneo
+enum RondaPartido {
+  DIECISEISAVOS
+  OCTAVOS
+  CUARTOS
+  SEMIFINAL
+  TERCER_LUGAR
+  FINAL
+}
+
+/// Participante de la quiniela
+model Participante {
+  id         Int      @id @default(autoincrement())
+  nombre     String   @unique @db.VarChar(100)
+  email      String?  @unique @db.VarChar(200)
+  created_at DateTime @default(now())
+
+  pronosticos     Pronostico[]
+  puntajePartidos PuntajePartido[]
+
+  @@map("participantes")
+}
+
+/// Partido del Mundial
+model Partido {
+  id                   Int            @id @default(autoincrement())
+  fecha                DateTime
+  equipo_local         String         @db.VarChar(100)
+  equipo_visitante     String         @db.VarChar(100)
+  goles_local_real     Int?
+  goles_visitante_real Int?
+  estado               EstadoPartido  @default(PENDIENTE)
+  ronda                RondaPartido
+
+  pronosticos     Pronostico[]
+  puntajePartidos PuntajePartido[]
+
+  @@index([fecha])
+  @@index([estado])
+  @@index([ronda])
+  @@map("partidos")
+}
+
+/// Pronóstico de un participante para un partido
+model Pronostico {
+  id                         Int @id @default(autoincrement())
+  participante_id            Int
+  partido_id                 Int
+  goles_local_pronostico     Int
+  goles_visitante_pronostico Int
+
+  participante Participante @relation(fields: [participante_id], references: [id])
+  partido      Partido      @relation(fields: [partido_id], references: [id])
+
+  @@unique([participante_id, partido_id])
+  @@index([participante_id])
+  @@index([partido_id])
+  @@map("pronosticos")
+}
+
+/// Puntos obtenidos por un participante en un partido
+model PuntajePartido {
+  id                 Int      @id @default(autoincrement())
+  participante_id    Int
+  partido_id         Int
+  puntos             Int      // 0-5
+  acierto_resultado  Boolean  // true si acertó ganador/empate (+3)
+  acierto_local      Boolean  // true si acertó goles del local (+1)
+  acierto_visitante  Boolean  // true si acertó goles del visitante (+1)
+  calculado_en       DateTime @default(now())
+
+  participante Participante @relation(fields: [participante_id], references: [id])
+  partido      Partido      @relation(fields: [partido_id], references: [id])
+
+  @@unique([participante_id, partido_id])
+  @@index([participante_id])
+  @@map("puntaje_partidos")
+}
