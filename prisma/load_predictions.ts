@@ -166,25 +166,25 @@ Colombia.... 1
 Ghana......... 0
 
 Gabriel
-Sudáfrica..... 0
-Canadá......... 1
+Sudáfrica..... 1
+Canadá......... 2
 
 29/06
-Brasil...... 2
+Brasil...... 3
 Japón.... 1
 
-Alemania.... 3
+Alemania.... 2
 Paraguay.... 0
 
 Países Bajos.... 2
-Marruecos...... 2
+Marruecos...... 1
 
 30/06
 Costa de Marfil.... 1
-Noruega............... 3
+Noruega............... 2
 
-Francia....... 2
-Suecia........ 0
+Francia....... 3
+Suecia........ 1
 
 México....... 2
 Ecuador...... 1
@@ -193,31 +193,31 @@ Ecuador...... 1
 Inglaterra....... 3
 Rep Congo.... 0
 
-Bélgica........ 0
+Bélgica........ 2
 Senegal....... 1
 
 Estados Unidos...... 2
 Bosnia H................. 0
 
 02/07
-España........ 2
-Austria........ 0
+España........ 3
+Austria........ 1
 
-Portugal..... 1
-Croacia....... 0
+Portugal..... 2
+Croacia....... 1
 
-Suiza........ 1
-Argelia..... 1
+Suiza........ 2
+Argelia..... 0
 
 03/07
-Australia.... 0
-Egipto........ 2
+Australia.... 1
+Egipto........ 0
 
-Argentina....... 2
+Argentina....... 3
 Cabo Verde.... 0
 
-Colombia.... 1
-Ghana......... 0
+Colombia.... 2
+Ghana......... 1
 
 
 Werner Dario

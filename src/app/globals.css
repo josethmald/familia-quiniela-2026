@@ -246,7 +246,7 @@ body::before {
   border-radius: var(--radius-md);
   padding: 12px 16px;
   color: var(--text-primary);
-  font-size: 0.9rem;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
   transition: all 0.2s ease;
   width: 100%;
@@ -269,7 +269,7 @@ body::before {
   border-radius: var(--radius-md);
   padding: 12px 16px;
   color: var(--text-primary);
-  font-size: 0.9rem;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -621,6 +621,10 @@ body::before {
 }
 
 @media (max-width: 639px) {
+  .input-field,
+  .select-field {
+    padding: 10px 12px;
+  }
   .bracket-wrapper {
     -webkit-overflow-scrolling: touch;
     padding: 12px !important;

@@ -18,8 +18,9 @@ interface RankingEntry {
   participante_id: number;
   nombre: string;
   puntos_totales: number;
-  partidos_perfectos: number;  // partidos con 5 puntos
-  aciertos_resultado: number;  // partidos con acierto de ganador/empate
+  puntos_octavos: number;
+  partidos_perfectos: number;
+  aciertos_resultado: number;
   partidos_jugados: number;
 }
 
@@ -28,13 +29,20 @@ export async function GET() {
     // Obtener todos los participantes con sus puntajes
     const participantes = await prisma.participante.findMany({
       include: {
-        puntajePartidos: true,
+        puntajePartidos: {
+          include: {
+            partido: true,
+          },
+        },
       },
     });
 
     // Calcular ranking
     const ranking: Omit<RankingEntry, 'posicion'>[] = participantes.map((p) => {
       const puntosTotales = p.puntajePartidos.reduce((sum, pp) => sum + pp.puntos, 0);
+      const puntosOctavos = p.puntajePartidos
+        .filter((pp) => pp.partido.ronda === 'OCTAVOS')
+        .reduce((sum, pp) => sum + pp.puntos, 0);
       const partidosPerfectos = p.puntajePartidos.filter((pp) => pp.puntos === 5).length;
       const aciertosResultado = p.puntajePartidos.filter((pp) => pp.acierto_resultado).length;
 
@@ -42,6 +50,7 @@ export async function GET() {
         participante_id: p.id,
         nombre: p.nombre,
         puntos_totales: puntosTotales,
+        puntos_octavos: puntosOctavos,
         partidos_perfectos: partidosPerfectos,
         aciertos_resultado: aciertosResultado,
         partidos_jugados: p.puntajePartidos.length,

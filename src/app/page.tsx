@@ -9,6 +9,7 @@ interface RankingEntry {
   participante_id: number;
   nombre: string;
   puntos_totales: number;
+  puntos_octavos: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
   partidos_jugados: number;
@@ -19,6 +20,8 @@ export default function RankingPage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'total' | 'octavos'>('total');
+  const [sortAsc, setSortAsc] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [password, setPassword] = useState('');
@@ -82,6 +85,27 @@ export default function RankingPage() {
     } finally {
       setLoginLoading(false);
     }
+  };
+
+  const handleSort = (column: 'total' | 'octavos') => {
+    if (sortBy === column) {
+      setSortAsc(!sortAsc);
+    } else {
+      setSortBy(column);
+      setSortAsc(false);
+    }
+  };
+
+  const sortedRanking = [...ranking].sort((a, b) => {
+    const valA = sortBy === 'total' ? a.puntos_totales : a.puntos_octavos;
+    const valB = sortBy === 'total' ? b.puntos_totales : b.puntos_octavos;
+    if (valB !== valA) return sortAsc ? valA - valB : valB - valA;
+    return a.nombre.localeCompare(b.nombre, 'es');
+  }).map((entry, i) => ({ ...entry, posicion: i + 1 }));
+
+  const getSortIndicator = (column: 'total' | 'octavos') => {
+    if (sortBy !== column) return '';
+    return sortAsc ? ' ▲' : ' ▼';
   };
 
   const handleLogout = () => {
@@ -267,14 +291,25 @@ export default function RankingPage() {
               <tr>
                 <th style={{ width: '60px', textAlign: 'center' }}>#</th>
                 <th>Participante</th>
-                <th style={{ textAlign: 'center' }}>Puntos</th>
+                <th
+                  style={{ textAlign: 'center', cursor: 'pointer', userSelect: 'none' }}
+                  onClick={() => handleSort('total')}
+                >
+                  Total{getSortIndicator('total')}
+                </th>
+                <th
+                  style={{ textAlign: 'center', cursor: 'pointer', userSelect: 'none' }}
+                  onClick={() => handleSort('octavos')}
+                >
+                  🏅 Octavos{getSortIndicator('octavos')}
+                </th>
                 <th style={{ textAlign: 'center' }}>⭐ Perfectos</th>
                 <th style={{ textAlign: 'center' }}>✅ Aciertos</th>
                 <th style={{ textAlign: 'center' }}>PJ</th>
               </tr>
             </thead>
             <tbody>
-              {ranking.filter((e) => e.nombre.toLowerCase().includes(searchTerm.toLowerCase())).map((entry) => (
+              {sortedRanking.filter((e) => e.nombre.toLowerCase().includes(searchTerm.toLowerCase())).map((entry) => (
                 <tr key={entry.participante_id} id={`ranking-row-${entry.participante_id}`}>
                   <td style={{ textAlign: 'center' }}>
                     {getPositionBadge(entry.posicion)}
@@ -299,6 +334,9 @@ export default function RankingPage() {
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     {getPointsBadge(entry.puntos_totales)}
+                  </td>
+                  <td style={{ textAlign: 'center', color: '#f0d78c', fontWeight: 700 }}>
+                    {entry.puntos_octavos}
                   </td>
                   <td style={{ textAlign: 'center', color: '#d4a843' }}>
                     {entry.partidos_perfectos}
@@ -328,6 +366,7 @@ export default function RankingPage() {
         }}
       >
         <span>⭐ Perfectos = Partidos con 5 puntos</span>
+        <span>🏅 Octavos = Puntos en octavos de final</span>
         <span>✅ Aciertos = Resultado correcto</span>
         <span>PJ = Partidos jugados</span>
       </div>

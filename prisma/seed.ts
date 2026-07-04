@@ -43,14 +43,14 @@ async function main() {
     // ════════════════════════════════════════
     // OCTAVOS DE FINAL (Round of 16)
     // ════════════════════════════════════════
-    { id: 89,  fecha: '2026-07-04T21:00:00Z', equipo_local: 'Ganador 74',        equipo_visitante: 'Ganador 77',        ronda: 'OCTAVOS' },
-    { id: 90,  fecha: '2026-07-04T17:00:00Z', equipo_local: 'Ganador 73',        equipo_visitante: 'Ganador 75',        ronda: 'OCTAVOS' },
-    { id: 91,  fecha: '2026-07-05T20:00:00Z', equipo_local: 'Ganador 76',        equipo_visitante: 'Ganador 78',        ronda: 'OCTAVOS' },
-    { id: 92,  fecha: '2026-07-06T00:00:00Z', equipo_local: 'Ganador 79',        equipo_visitante: 'Ganador 80',        ronda: 'OCTAVOS' },
-    { id: 93,  fecha: '2026-07-06T19:00:00Z', equipo_local: 'Ganador 83',        equipo_visitante: 'Ganador 84',        ronda: 'OCTAVOS' },
-    { id: 94,  fecha: '2026-07-07T00:00:00Z', equipo_local: 'Ganador 81',        equipo_visitante: 'Ganador 82',        ronda: 'OCTAVOS' },
-    { id: 95,  fecha: '2026-07-07T16:00:00Z', equipo_local: 'Ganador 86',        equipo_visitante: 'Ganador 88',        ronda: 'OCTAVOS' },
-    { id: 96,  fecha: '2026-07-07T20:00:00Z', equipo_local: 'Ganador 85',        equipo_visitante: 'Ganador 87',        ronda: 'OCTAVOS' },
+    { id: 89,  fecha: '2026-07-04T21:00:00Z', equipo_local: 'Paraguay',          equipo_visitante: 'Francia',          ronda: 'OCTAVOS' },
+    { id: 90,  fecha: '2026-07-04T17:00:00Z', equipo_local: 'Canadá',           equipo_visitante: 'Marruecos',        ronda: 'OCTAVOS' },
+    { id: 91,  fecha: '2026-07-05T20:00:00Z', equipo_local: 'Brasil',            equipo_visitante: 'Noruega',          ronda: 'OCTAVOS' },
+    { id: 92,  fecha: '2026-07-06T00:00:00Z', equipo_local: 'México',            equipo_visitante: 'Inglaterra',       ronda: 'OCTAVOS' },
+    { id: 93,  fecha: '2026-07-06T19:00:00Z', equipo_local: 'Portugal',          equipo_visitante: 'España',           ronda: 'OCTAVOS' },
+    { id: 94,  fecha: '2026-07-07T00:00:00Z', equipo_local: 'Estados Unidos',    equipo_visitante: 'Bélgica',          ronda: 'OCTAVOS' },
+    { id: 95,  fecha: '2026-07-07T16:00:00Z', equipo_local: 'Argentina',         equipo_visitante: 'Egipto',           ronda: 'OCTAVOS' },
+    { id: 96,  fecha: '2026-07-07T20:00:00Z', equipo_local: 'Suiza',             equipo_visitante: 'Colombia',         ronda: 'OCTAVOS' },
 
     // ════════════════════════════════════════
     // CUARTOS DE FINAL (Quarter-finals)

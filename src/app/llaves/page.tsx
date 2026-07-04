@@ -27,6 +27,8 @@ const RONDA_LABELS: Record<string, string> = {
   TERCER_LUGAR: '3er Puesto',
 };
 
+const DIECISEISAVOS_ORDER = [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87];
+
 function gridRow(rondaIdx: number, matchIdx: number): string {
   const span = Math.pow(2, rondaIdx);
   const start = matchIdx * span + 2;
@@ -89,6 +91,9 @@ export default function LlavesPage() {
     for (const p of partidos) {
       if (!g[p.ronda]) g[p.ronda] = [];
       g[p.ronda].push(p);
+    }
+    if (g['DIECISEISAVOS']) {
+      g['DIECISEISAVOS'].sort((a, b) => DIECISEISAVOS_ORDER.indexOf(a.id) - DIECISEISAVOS_ORDER.indexOf(b.id));
     }
     return g;
   }, [partidos]);
