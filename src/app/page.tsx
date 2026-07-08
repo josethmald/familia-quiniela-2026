@@ -10,6 +10,7 @@ interface RankingEntry {
   nombre: string;
   puntos_totales: number;
   puntos_octavos: number;
+  puntos_cuartos: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
   partidos_jugados: number;
@@ -20,7 +21,7 @@ export default function RankingPage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'total' | 'octavos'>('total');
+  const [sortBy, setSortBy] = useState<'total' | 'octavos' | 'cuartos'>('total');
   const [sortAsc, setSortAsc] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -87,7 +88,7 @@ export default function RankingPage() {
     }
   };
 
-  const handleSort = (column: 'total' | 'octavos') => {
+  const handleSort = (column: 'total' | 'octavos' | 'cuartos') => {
     if (sortBy === column) {
       setSortAsc(!sortAsc);
     } else {
@@ -97,13 +98,13 @@ export default function RankingPage() {
   };
 
   const sortedRanking = [...ranking].sort((a, b) => {
-    const valA = sortBy === 'total' ? a.puntos_totales : a.puntos_octavos;
-    const valB = sortBy === 'total' ? b.puntos_totales : b.puntos_octavos;
+    const valA = sortBy === 'total' ? a.puntos_totales : sortBy === 'octavos' ? a.puntos_octavos : a.puntos_cuartos;
+    const valB = sortBy === 'total' ? b.puntos_totales : sortBy === 'octavos' ? b.puntos_octavos : b.puntos_cuartos;
     if (valB !== valA) return sortAsc ? valA - valB : valB - valA;
     return a.nombre.localeCompare(b.nombre, 'es');
   }).map((entry, i) => ({ ...entry, posicion: i + 1 }));
 
-  const getSortIndicator = (column: 'total' | 'octavos') => {
+  const getSortIndicator = (column: 'total' | 'octavos' | 'cuartos') => {
     if (sortBy !== column) return '';
     return sortAsc ? ' ▲' : ' ▼';
   };
@@ -303,6 +304,12 @@ export default function RankingPage() {
                 >
                   🏅 Octavos{getSortIndicator('octavos')}
                 </th>
+                <th
+                  style={{ textAlign: 'center', cursor: 'pointer', userSelect: 'none' }}
+                  onClick={() => handleSort('cuartos')}
+                >
+                  🏆 Cuartos{getSortIndicator('cuartos')}
+                </th>
                 <th style={{ textAlign: 'center' }}>⭐ Perfectos</th>
                 <th style={{ textAlign: 'center' }}>✅ Aciertos</th>
                 <th style={{ textAlign: 'center' }}>PJ</th>
@@ -338,6 +345,9 @@ export default function RankingPage() {
                   <td style={{ textAlign: 'center', color: '#f0d78c', fontWeight: 700 }}>
                     {entry.puntos_octavos}
                   </td>
+                  <td style={{ textAlign: 'center', color: '#d4a843', fontWeight: 700 }}>
+                    {entry.puntos_cuartos}
+                  </td>
                   <td style={{ textAlign: 'center', color: '#d4a843' }}>
                     {entry.partidos_perfectos}
                   </td>
@@ -367,6 +377,7 @@ export default function RankingPage() {
       >
         <span>⭐ Perfectos = Partidos con 5 puntos</span>
         <span>🏅 Octavos = Puntos en octavos de final</span>
+        <span>🏆 Cuartos = Puntos en cuartos de final</span>
         <span>✅ Aciertos = Resultado correcto</span>
         <span>PJ = Partidos jugados</span>
       </div>

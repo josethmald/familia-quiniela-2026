@@ -19,6 +19,7 @@ interface RankingEntry {
   nombre: string;
   puntos_totales: number;
   puntos_octavos: number;
+  puntos_cuartos: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
   partidos_jugados: number;
@@ -43,6 +44,9 @@ export async function GET() {
       const puntosOctavos = p.puntajePartidos
         .filter((pp) => pp.partido.ronda === 'OCTAVOS')
         .reduce((sum, pp) => sum + pp.puntos, 0);
+      const puntosCuartos = p.puntajePartidos
+        .filter((pp) => pp.partido.ronda === 'CUARTOS')
+        .reduce((sum, pp) => sum + pp.puntos, 0);
       const partidosPerfectos = p.puntajePartidos.filter((pp) => pp.puntos === 5).length;
       const aciertosResultado = p.puntajePartidos.filter((pp) => pp.acierto_resultado).length;
 
@@ -51,6 +55,7 @@ export async function GET() {
         nombre: p.nombre,
         puntos_totales: puntosTotales,
         puntos_octavos: puntosOctavos,
+        puntos_cuartos: puntosCuartos,
         partidos_perfectos: partidosPerfectos,
         aciertos_resultado: aciertosResultado,
         partidos_jugados: p.puntajePartidos.length,
