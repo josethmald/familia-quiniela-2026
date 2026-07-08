@@ -38,6 +38,7 @@ export default function AdminResultadosPage() {
   const [selectedPartido, setSelectedPartido] = useState<number | null>(null);
   const [golesLocal, setGolesLocal] = useState('');
   const [golesVisitante, setGolesVisitante] = useState('');
+  const [ganadorPenales, setGanadorPenales] = useState<'local' | 'visitante' | null>(null);
   const [toast, setToast] = useState<ToastData | null>(null);
 
   const fetchPartidos = useCallback(async () => {
@@ -66,6 +67,11 @@ export default function AdminResultadosPage() {
   useEffect(() => {
     fetchPartidos();
   }, [fetchPartidos]);
+
+  // Reset penal winner when scores change
+  useEffect(() => {
+    setGanadorPenales(null);
+  }, [golesLocal, golesVisitante]);
 
   const selectedMatch = partidos.find((p) => p.id === selectedPartido);
 
@@ -98,6 +104,7 @@ export default function AdminResultadosPage() {
           partidoId: selectedPartido,
           goles_local: golesL,
           goles_visitante: golesV,
+          ...(golesL === golesV && ganadorPenales ? { ganador_penales: ganadorPenales } : {}),
         }),
       });
 
@@ -113,6 +120,7 @@ export default function AdminResultadosPage() {
         setSelectedPartido(null);
         setGolesLocal('');
         setGolesVisitante('');
+        setGanadorPenales(null);
         fetchPartidos();
       } else {
         setToast({ message: data.error || 'Error al cargar resultado', type: 'error' });
@@ -390,6 +398,67 @@ export default function AdminResultadosPage() {
                 />
               </div>
             </div>
+
+            {/* Penalty selector: visible only when scores are equal */}
+            {golesLocal !== '' && golesVisitante !== '' && parseInt(golesLocal) === parseInt(golesVisitante) && (
+              <div
+                style={{
+                  marginBottom: '24px',
+                  padding: '16px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  borderRadius: '12px',
+                  textAlign: 'center',
+                }}
+              >
+                <p style={{ color: '#fca5a5', fontWeight: 700, fontSize: '0.85rem', marginBottom: '12px' }}>
+                  ⚠️ Empate — ¿Ganador en penales?
+                </p>
+                {selectedMatch && (
+                  <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={() => setGanadorPenales('local')}
+                      style={{
+                        flex: 1,
+                        padding: '10px 16px',
+                        borderRadius: '8px',
+                        border: ganadorPenales === 'local' ? '2px solid #d4a843' : '1px solid rgba(255,255,255,0.1)',
+                        background: ganadorPenales === 'local' ? 'rgba(212, 168, 67, 0.15)' : 'rgba(255,255,255,0.04)',
+                        color: '#f9fafb',
+                        fontWeight: ganadorPenales === 'local' ? 700 : 500,
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                      }}
+                    >
+                      {selectedMatch.equipo_local}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGanadorPenales('visitante')}
+                      style={{
+                        flex: 1,
+                        padding: '10px 16px',
+                        borderRadius: '8px',
+                        border: ganadorPenales === 'visitante' ? '2px solid #d4a843' : '1px solid rgba(255,255,255,0.1)',
+                        background: ganadorPenales === 'visitante' ? 'rgba(212, 168, 67, 0.15)' : 'rgba(255,255,255,0.04)',
+                        color: '#f9fafb',
+                        fontWeight: ganadorPenales === 'visitante' ? 700 : 500,
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                      }}
+                    >
+                      {selectedMatch.equipo_visitante}
+                    </button>
+                  </div>
+                )}
+                {ganadorPenales && (
+                  <p style={{ color: '#10b981', fontSize: '0.75rem', marginTop: '8px' }}>
+                    ✅ Ganador: {ganadorPenales === 'local' ? selectedMatch?.equipo_local : selectedMatch?.equipo_visitante}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Submit */}
             <button

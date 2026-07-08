@@ -28,6 +28,7 @@ const RONDA_LABELS: Record<string, string> = {
 };
 
 const DIECISEISAVOS_ORDER = [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87];
+const CUARTOS_ORDER = [97, 99, 98, 100];
 
 function gridRow(rondaIdx: number, matchIdx: number): string {
   const span = Math.pow(2, rondaIdx);
@@ -94,6 +95,9 @@ export default function LlavesPage() {
     }
     if (g['DIECISEISAVOS']) {
       g['DIECISEISAVOS'].sort((a, b) => DIECISEISAVOS_ORDER.indexOf(a.id) - DIECISEISAVOS_ORDER.indexOf(b.id));
+    }
+    if (g['CUARTOS']) {
+      g['CUARTOS'].sort((a, b) => CUARTOS_ORDER.indexOf(a.id) - CUARTOS_ORDER.indexOf(b.id));
     }
     return g;
   }, [partidos]);
