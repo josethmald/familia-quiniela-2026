@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Toast from '@/components/Toast';
+import AdminNav from '@/components/AdminNav';
 
 interface PartidoPendiente {
   id: number;
@@ -177,36 +178,20 @@ export default function AdminResultadosPage() {
 
       {/* Header */}
       <div style={{ marginBottom: '32px' }}>
-        <Link
-          href="/"
-          style={{
-            color: '#9ca3af',
-            textDecoration: 'none',
-            fontSize: '0.85rem',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            marginBottom: '16px',
-          }}
-        >
-          ← Volver al Ranking
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', justifyContent: 'space-between' }}>
-          <span
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <Link
+            href="/"
             style={{
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#fca5a5',
-              padding: '4px 10px',
-              borderRadius: '6px',
-              fontSize: '0.7rem',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
+              color: '#9ca3af',
+              textDecoration: 'none',
+              fontSize: '0.85rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
-            Admin
-          </span>
+            ← Volver al Ranking
+          </Link>
           <button
             onClick={handleLogout}
             style={{
@@ -223,6 +208,8 @@ export default function AdminResultadosPage() {
             Cerrar sesión
           </button>
         </div>
+
+        <AdminNav />
 
         <h1
           style={{

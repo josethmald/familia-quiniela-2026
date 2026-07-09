@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Toast from '@/components/Toast';
+import AdminNav from '@/components/AdminNav';
 
 interface ToastData {
   message: string;
@@ -105,7 +106,7 @@ export default function AdminBonificacionesPage() {
     <div>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <Link href="/" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: '0.85rem' }}>
           ← Volver al Ranking
         </Link>
@@ -113,6 +114,8 @@ export default function AdminBonificacionesPage() {
           Cerrar sesión
         </button>
       </div>
+
+      <AdminNav />
 
       <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 800, marginBottom: '4px' }}>
         <span style={{ background: 'linear-gradient(135deg, #d4a843, #f0d78c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
