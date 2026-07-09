@@ -33,8 +33,9 @@ model Participante {
   email      String?  @unique @db.VarChar(200)
   created_at DateTime @default(now())
 
-  pronosticos     Pronostico[]
-  puntajePartidos PuntajePartido[]
+  pronosticos       Pronostico[]
+  puntajePartidos   PuntajePartido[]
+  prediccionesBonus PrediccionBonus[]
 
   @@map("participantes")
 }
@@ -74,6 +75,28 @@ model Pronostico {
   @@index([participante_id])
   @@index([partido_id])
   @@map("pronosticos")
+}
+
+/// Predicción bonus de un participante (campeón, subcampeón, goleador)
+model PrediccionBonus {
+  id              Int          @id @default(autoincrement())
+  participante_id Int
+  tipo            String       @db.VarChar(20) // 'CAMPEON' | 'SUB_CAMPEON' | 'GOLEADOR'
+  valor           String       @db.VarChar(200)
+
+  participante    Participante @relation(fields: [participante_id], references: [id])
+
+  @@unique([participante_id, tipo])
+  @@map("predicciones_bonus")
+}
+
+/// Valor real de cada categoría bonus (ingresado por admin)
+model ConfiguracionBonus {
+  id    Int    @id @default(autoincrement())
+  tipo  String @unique @db.VarChar(20) // 'CAMPEON' | 'SUB_CAMPEON' | 'GOLEADOR'
+  valor String @db.VarChar(200)
+
+  @@map("configuracion_bonus")
 }
 
 /// Puntos obtenidos por un participante en un partido

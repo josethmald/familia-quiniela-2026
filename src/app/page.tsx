@@ -11,6 +11,7 @@ interface RankingEntry {
   puntos_totales: number;
   puntos_octavos: number;
   puntos_cuartos: number;
+  puntos_bonus: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
   partidos_jugados: number;
@@ -310,6 +311,7 @@ export default function RankingPage() {
                 >
                   🏆 Cuartos{getSortIndicator('cuartos')}
                 </th>
+                <th style={{ textAlign: 'center' }}>🎯 Bonus</th>
                 <th style={{ textAlign: 'center' }}>⭐ Perfectos</th>
                 <th style={{ textAlign: 'center' }}>✅ Aciertos</th>
                 <th style={{ textAlign: 'center' }}>PJ</th>
@@ -348,6 +350,9 @@ export default function RankingPage() {
                   <td style={{ textAlign: 'center', color: '#d4a843', fontWeight: 700 }}>
                     {entry.puntos_cuartos}
                   </td>
+                  <td style={{ textAlign: 'center', color: '#10b981', fontWeight: 700 }}>
+                    {entry.puntos_bonus > 0 ? `+${entry.puntos_bonus}` : '0'}
+                  </td>
                   <td style={{ textAlign: 'center', color: '#d4a843' }}>
                     {entry.partidos_perfectos}
                   </td>
@@ -378,6 +383,7 @@ export default function RankingPage() {
         <span>⭐ Perfectos = Partidos con 5 puntos</span>
         <span>🏅 Octavos = Puntos en octavos de final</span>
         <span>🏆 Cuartos = Puntos en cuartos de final</span>
+        <span>🎯 Bonus = Campeón (+4), Subcampeón (+3), Goleador (+2)</span>
         <span>✅ Aciertos = Resultado correcto</span>
         <span>PJ = Partidos jugados</span>
       </div>

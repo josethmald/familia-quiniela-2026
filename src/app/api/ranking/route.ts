@@ -20,6 +20,7 @@ interface RankingEntry {
   puntos_totales: number;
   puntos_octavos: number;
   puntos_cuartos: number;
+  puntos_bonus: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
   partidos_jugados: number;
@@ -27,7 +28,27 @@ interface RankingEntry {
 
 export async function GET() {
   try {
-    // Obtener todos los participantes con sus puntajes
+    // 1. Obtener bonus config y predicciones
+    const [configBonus, prediccionesBonus] = await Promise.all([
+      prisma.configuracionBonus.findMany(),
+      prisma.prediccionBonus.findMany(),
+    ]);
+
+    const realMap: Record<string, string> = {};
+    for (const c of configBonus) realMap[c.tipo] = c.valor.toLowerCase();
+
+    const PUNTOS_BONUS: Record<string, number> = { CAMPEON: 4, SUB_CAMPEON: 3, GOLEADOR: 2 };
+
+    // Map participante_id → puntos bonus
+    const bonusPorParticipante: Record<number, number> = {};
+    for (const pb of prediccionesBonus) {
+      const real = realMap[pb.tipo];
+      if (real && pb.valor.toLowerCase() === real) {
+        bonusPorParticipante[pb.participante_id] = (bonusPorParticipante[pb.participante_id] || 0) + (PUNTOS_BONUS[pb.tipo] || 0);
+      }
+    }
+
+    // 2. Obtener todos los participantes con sus puntajes
     const participantes = await prisma.participante.findMany({
       include: {
         puntajePartidos: {
@@ -38,7 +59,7 @@ export async function GET() {
       },
     });
 
-    // Calcular ranking
+    // 3. Calcular ranking
     const ranking: Omit<RankingEntry, 'posicion'>[] = participantes.map((p) => {
       const puntosTotales = p.puntajePartidos.reduce((sum, pp) => sum + pp.puntos, 0);
       const puntosOctavos = p.puntajePartidos
@@ -47,15 +68,17 @@ export async function GET() {
       const puntosCuartos = p.puntajePartidos
         .filter((pp) => pp.partido.ronda === 'CUARTOS')
         .reduce((sum, pp) => sum + pp.puntos, 0);
+      const puntosBonus = bonusPorParticipante[p.id] || 0;
       const partidosPerfectos = p.puntajePartidos.filter((pp) => pp.puntos === 5).length;
       const aciertosResultado = p.puntajePartidos.filter((pp) => pp.acierto_resultado).length;
 
       return {
         participante_id: p.id,
         nombre: p.nombre,
-        puntos_totales: puntosTotales,
+        puntos_totales: puntosTotales + puntosBonus,
         puntos_octavos: puntosOctavos,
         puntos_cuartos: puntosCuartos,
+        puntos_bonus: puntosBonus,
         partidos_perfectos: partidosPerfectos,
         aciertos_resultado: aciertosResultado,
         partidos_jugados: p.puntajePartidos.length,
