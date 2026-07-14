@@ -30,8 +30,8 @@ const AVANCE_OCTAVOS: Record<number, { to: number; as: 'local' | 'visitante' }> 
 
 const AVANCE_CUARTOS: Record<number, { to: number; as: 'local' | 'visitante' }> = {
   97: { to: 101, as: 'local' },
-  99: { to: 101, as: 'visitante' },
-  98: { to: 102, as: 'local' },
+  98: { to: 101, as: 'visitante' },
+  99: { to: 102, as: 'local' },
   100: { to: 102, as: 'visitante' },
 };
 

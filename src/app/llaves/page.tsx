@@ -28,7 +28,7 @@ const RONDA_LABELS: Record<string, string> = {
 };
 
 const DIECISEISAVOS_ORDER = [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87];
-const CUARTOS_ORDER = [97, 99, 98, 100];
+const CUARTOS_ORDER = [97, 98, 99, 100];
 
 function gridRow(rondaIdx: number, matchIdx: number): string {
   const span = Math.pow(2, rondaIdx);
