@@ -27,7 +27,8 @@ const RONDA_LABELS: Record<string, string> = {
   TERCER_LUGAR: '3er Puesto',
 };
 
-const DIECISEISAVOS_ORDER = [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87];
+const DIECISEISAVOS_ORDER = [73, 74, 75, 76, 81, 82, 83, 84, 77, 78, 79, 80, 85, 86, 87, 88];
+const OCTAVOS_ORDER = [89, 90, 93, 94, 91, 92, 95, 96];
 const CUARTOS_ORDER = [97, 98, 99, 100];
 
 function gridRow(rondaIdx: number, matchIdx: number): string {
@@ -95,6 +96,9 @@ export default function LlavesPage() {
     }
     if (g['DIECISEISAVOS']) {
       g['DIECISEISAVOS'].sort((a, b) => DIECISEISAVOS_ORDER.indexOf(a.id) - DIECISEISAVOS_ORDER.indexOf(b.id));
+    }
+    if (g['OCTAVOS']) {
+      g['OCTAVOS'].sort((a, b) => OCTAVOS_ORDER.indexOf(a.id) - OCTAVOS_ORDER.indexOf(b.id));
     }
     if (g['CUARTOS']) {
       g['CUARTOS'].sort((a, b) => CUARTOS_ORDER.indexOf(a.id) - CUARTOS_ORDER.indexOf(b.id));
