@@ -20,6 +20,7 @@ interface RankingEntry {
   puntos_totales: number;
   puntos_octavos: number;
   puntos_cuartos: number;
+  puntos_semifinal: number;
   puntos_bonus: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
@@ -68,6 +69,9 @@ export async function GET() {
       const puntosCuartos = p.puntajePartidos
         .filter((pp) => pp.partido.ronda === 'CUARTOS')
         .reduce((sum, pp) => sum + pp.puntos, 0);
+      const puntosSemifinal = p.puntajePartidos
+        .filter((pp) => pp.partido.ronda === 'SEMIFINAL')
+        .reduce((sum, pp) => sum + pp.puntos, 0);
       const puntosBonus = bonusPorParticipante[p.id] || 0;
       const partidosPerfectos = p.puntajePartidos.filter((pp) => pp.puntos === 5).length;
       const aciertosResultado = p.puntajePartidos.filter((pp) => pp.acierto_resultado).length;
@@ -78,6 +82,7 @@ export async function GET() {
         puntos_totales: puntosTotales + puntosBonus,
         puntos_octavos: puntosOctavos,
         puntos_cuartos: puntosCuartos,
+        puntos_semifinal: puntosSemifinal,
         puntos_bonus: puntosBonus,
         partidos_perfectos: partidosPerfectos,
         aciertos_resultado: aciertosResultado,

@@ -11,6 +11,7 @@ interface RankingEntry {
   puntos_totales: number;
   puntos_octavos: number;
   puntos_cuartos: number;
+  puntos_semifinal: number;
   puntos_bonus: number;
   partidos_perfectos: number;
   aciertos_resultado: number;
@@ -22,7 +23,7 @@ export default function RankingPage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'total' | 'octavos' | 'cuartos'>('total');
+  const [sortBy, setSortBy] = useState<'total' | 'octavos' | 'cuartos' | 'semifinal'>('total');
   const [sortAsc, setSortAsc] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -89,7 +90,7 @@ export default function RankingPage() {
     }
   };
 
-  const handleSort = (column: 'total' | 'octavos' | 'cuartos') => {
+  const handleSort = (column: 'total' | 'octavos' | 'cuartos' | 'semifinal') => {
     if (sortBy === column) {
       setSortAsc(!sortAsc);
     } else {
@@ -99,13 +100,13 @@ export default function RankingPage() {
   };
 
   const sortedRanking = [...ranking].sort((a, b) => {
-    const valA = sortBy === 'total' ? a.puntos_totales : sortBy === 'octavos' ? a.puntos_octavos : a.puntos_cuartos;
-    const valB = sortBy === 'total' ? b.puntos_totales : sortBy === 'octavos' ? b.puntos_octavos : b.puntos_cuartos;
+    const valA = sortBy === 'total' ? a.puntos_totales : sortBy === 'octavos' ? a.puntos_octavos : sortBy === 'cuartos' ? a.puntos_cuartos : a.puntos_semifinal;
+    const valB = sortBy === 'total' ? b.puntos_totales : sortBy === 'octavos' ? b.puntos_octavos : sortBy === 'cuartos' ? b.puntos_cuartos : b.puntos_semifinal;
     if (valB !== valA) return sortAsc ? valA - valB : valB - valA;
     return a.nombre.localeCompare(b.nombre, 'es');
   }).map((entry, i) => ({ ...entry, posicion: i + 1 }));
 
-  const getSortIndicator = (column: 'total' | 'octavos' | 'cuartos') => {
+  const getSortIndicator = (column: 'total' | 'octavos' | 'cuartos' | 'semifinal') => {
     if (sortBy !== column) return '';
     return sortAsc ? ' ▲' : ' ▼';
   };
@@ -311,6 +312,12 @@ export default function RankingPage() {
                 >
                   🏆 Cuartos{getSortIndicator('cuartos')}
                 </th>
+                <th
+                  style={{ textAlign: 'center', cursor: 'pointer', userSelect: 'none' }}
+                  onClick={() => handleSort('semifinal')}
+                >
+                  ⚡ Semifinal{getSortIndicator('semifinal')}
+                </th>
                 <th style={{ textAlign: 'center' }}>🎯 Bonus</th>
                 <th style={{ textAlign: 'center' }}>⭐ Perfectos</th>
                 <th style={{ textAlign: 'center' }}>✅ Aciertos</th>
@@ -350,6 +357,9 @@ export default function RankingPage() {
                   <td style={{ textAlign: 'center', color: '#d4a843', fontWeight: 700 }}>
                     {entry.puntos_cuartos}
                   </td>
+                  <td style={{ textAlign: 'center', color: '#a78bfa', fontWeight: 700 }}>
+                    {entry.puntos_semifinal}
+                  </td>
                   <td style={{ textAlign: 'center', color: '#10b981', fontWeight: 700 }}>
                     {entry.puntos_bonus > 0 ? `+${entry.puntos_bonus}` : '0'}
                   </td>
@@ -383,6 +393,7 @@ export default function RankingPage() {
         <span>⭐ Perfectos = Partidos con 5 puntos</span>
         <span>🏅 Octavos = Puntos en octavos de final</span>
         <span>🏆 Cuartos = Puntos en cuartos de final</span>
+        <span>⚡ Semifinal = Puntos en semifinal</span>
         <span>🎯 Bonus = Campeón (+6), Subcampeón (+4), Goleador (+3)</span>
         <span>✅ Aciertos = Resultado correcto</span>
         <span>PJ = Partidos jugados</span>

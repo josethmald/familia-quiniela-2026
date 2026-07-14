@@ -28,6 +28,13 @@ const AVANCE_OCTAVOS: Record<number, { to: number; as: 'local' | 'visitante' }> 
   96: { to: 100, as: 'visitante' },
 };
 
+const AVANCE_CUARTOS: Record<number, { to: number; as: 'local' | 'visitante' }> = {
+  97: { to: 101, as: 'local' },
+  99: { to: 101, as: 'visitante' },
+  98: { to: 102, as: 'local' },
+  100: { to: 102, as: 'visitante' },
+};
+
 function determinarGanador(
   golesLocal: number,
   golesVisitante: number,
@@ -155,33 +162,55 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 9. Avance automático de octavos → cuartos
+    // 9. Avance automático
     let avanceInfo: string | null = null;
-    const advance = AVANCE_OCTAVOS[partidoId];
-    if (advance) {
-      const ganador = determinarGanador(
-        goles_local,
-        goles_visitante,
-        ganador_penales ?? null,
-        partido.equipo_local,
-        partido.equipo_visitante
-      );
-      if (ganador) {
-        const updateData = advance.as === 'local'
-          ? { equipo_local: ganador }
-          : { equipo_visitante: ganador };
-        const matchDestino = await prisma.partido.findUnique({ where: { id: advance.to } });
-        if (matchDestino) {
-          await prisma.partido.update({
-            where: { id: advance.to },
-            data: updateData,
-          });
-          const campo = advance.as === 'local' ? 'local' : 'visitante';
-          avanceInfo = `${ganador} avanza como ${campo} al partido ${advance.to}`;
-        }
-      } else if (goles_local === goles_visitante) {
-        avanceInfo = 'Empate sin selección de penales — no se avanzó al cuartos';
+
+    const ganador = determinarGanador(
+      goles_local,
+      goles_visitante,
+      ganador_penales ?? null,
+      partido.equipo_local,
+      partido.equipo_visitante
+    );
+
+    // 9a. Octavos → cuartos
+    const avanceOctavos = AVANCE_OCTAVOS[partidoId];
+    if (avanceOctavos && ganador) {
+      const campo = avanceOctavos.as === 'local' ? 'equipo_local' : 'equipo_visitante';
+      const exist = await prisma.partido.findUnique({ where: { id: avanceOctavos.to } });
+      if (exist) {
+        await prisma.partido.update({ where: { id: avanceOctavos.to }, data: { [campo]: ganador } });
+        avanceInfo = `${ganador} avanza como ${avanceOctavos.as} al partido ${avanceOctavos.to}`;
       }
+    }
+
+    // 9b. Cuartos → semifinal
+    const avanceCuartos = AVANCE_CUARTOS[partidoId];
+    if (avanceCuartos && ganador) {
+      const campo = avanceCuartos.as === 'local' ? 'equipo_local' : 'equipo_visitante';
+      const exist = await prisma.partido.findUnique({ where: { id: avanceCuartos.to } });
+      if (exist) {
+        await prisma.partido.update({ where: { id: avanceCuartos.to }, data: { [campo]: ganador } });
+        avanceInfo = `${ganador} avanza como ${avanceCuartos.as} a semifinal (partido ${avanceCuartos.to})`;
+      }
+    }
+
+    // 9c. Semifinal → final / tercer lugar
+    if (partidoId >= 101 && partidoId <= 102 && ganador) {
+      const perdedor = ganador === partido.equipo_local ? partido.equipo_visitante : partido.equipo_local;
+      // Winner avanza a final
+      const finalCampo = partidoId === 101 ? 'equipo_local' : 'equipo_visitante';
+      const finalDest = await prisma.partido.findUnique({ where: { id: 104 } });
+      if (finalDest) {
+        await prisma.partido.update({ where: { id: 104 }, data: { [finalCampo]: ganador } });
+      }
+      // Loser va a tercer lugar
+      const tercerCampo = partidoId === 101 ? 'equipo_local' : 'equipo_visitante';
+      const tercerDest = await prisma.partido.findUnique({ where: { id: 103 } });
+      if (tercerDest) {
+        await prisma.partido.update({ where: { id: 103 }, data: { [tercerCampo]: perdedor } });
+      }
+      avanceInfo = `${ganador} avanza a la final, ${perdedor} va al tercer puesto`;
     }
 
     return NextResponse.json({
