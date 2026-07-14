@@ -131,19 +131,19 @@ export default function AdminBonificacionesPage() {
         <form onSubmit={handleSubmit} className="glass-card" style={{ padding: '24px', maxWidth: '500px' }}>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '6px' }}>
-              🥇 Campeón (+4 pts)
+              🥇 Campeón (+6 pts)
             </label>
             <input className="input-field" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px' }} value={campeon} onChange={(e) => setCampeon(e.target.value)} placeholder="Ej: Argentina" />
           </div>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '6px' }}>
-              🥈 Subcampeón (+3 pts)
+              🥈 Subcampeón (+4 pts)
             </label>
             <input className="input-field" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px' }} value={subCampeon} onChange={(e) => setSubCampeon(e.target.value)} placeholder="Ej: Francia" />
           </div>
           <div style={{ marginBottom: '24px' }}>
             <label style={{ display: 'block', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '6px' }}>
-              ⚽ Goleador (+2 pts)
+              ⚽ Goleador (+3 pts)
             </label>
             <input className="input-field" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px' }} value={goleador} onChange={(e) => setGoleador(e.target.value)} placeholder="Ej: Mbappé" />
           </div>

@@ -37,7 +37,7 @@ export async function GET() {
     const realMap: Record<string, string> = {};
     for (const c of configBonus) realMap[c.tipo] = c.valor.toLowerCase();
 
-    const PUNTOS_BONUS: Record<string, number> = { CAMPEON: 4, SUB_CAMPEON: 3, GOLEADOR: 2 };
+    const PUNTOS_BONUS: Record<string, number> = { CAMPEON: 6, SUB_CAMPEON: 4, GOLEADOR: 3 };
 
     // Map participante_id → puntos bonus
     const bonusPorParticipante: Record<number, number> = {};

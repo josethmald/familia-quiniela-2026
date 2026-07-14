@@ -383,7 +383,7 @@ export default function RankingPage() {
         <span>⭐ Perfectos = Partidos con 5 puntos</span>
         <span>🏅 Octavos = Puntos en octavos de final</span>
         <span>🏆 Cuartos = Puntos en cuartos de final</span>
-        <span>🎯 Bonus = Campeón (+4), Subcampeón (+3), Goleador (+2)</span>
+        <span>🎯 Bonus = Campeón (+6), Subcampeón (+4), Goleador (+3)</span>
         <span>✅ Aciertos = Resultado correcto</span>
         <span>PJ = Partidos jugados</span>
       </div>
